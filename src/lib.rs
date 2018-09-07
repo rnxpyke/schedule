@@ -5,13 +5,17 @@ use std::env;
 use std::path::PathBuf;
 
 
-pub fn get_path() -> String {
+pub fn get_path_string() -> String {
     let key = "HOME";
     let home = match env::var(key) {
         Ok(x) => x,
         Err(e) => panic!(e)
     };
     home + "/.schedule"
+}
+
+pub fn get_path() -> PathBuf {
+    PathBuf::from(get_path_string())
 }
 
 pub fn init_store() {
@@ -23,8 +27,13 @@ pub struct Project {
     path: PathBuf
 }
 
+#[derive(Debug, Clone)]
+pub struct Task {
+    path: PathBuf
+}
+
 impl Project {
-    pub fn from(path: PathBuf) -> Project {
+    fn from(path: PathBuf) -> Project {
         Project {
             path
         }
@@ -54,11 +63,36 @@ fn list_projects_res() -> io::Result<Vec<Project>> {
 }
 
 pub fn add_project(name: String) -> io::Result<()> {
-    let dir = get_path();
-    fs::create_dir(dir.clone()+"/"+&name)?;
-    let mut file = fs::File::create(dir+"/"+&name+"/name")?;
+    let mut path = get_path();
+
+    //create project dir
+    path.push(&name);
+    fs::create_dir(&path)?;
+
+    //create and write name file 
+    path.push("name");
+    let mut file = fs::File::create(&path)?;
     file.write(name.as_bytes())?;
+    path.pop();
+
+    //create tasks dir
+    path.push("tasks");
+    fs::create_dir(&path)?;
     Ok(())
 }
 
 
+fn list_tasks_res(p: &Project) -> io::Result<Vec<Task>> {
+    let mut dir = p.path.clone();
+    dir.push("tasks");
+    let mut tasks: Vec<Task> = Vec::new();
+
+    for entry in fs::read_dir(dir)? {
+        let entry = entry?;
+        let path = entry.path();
+        if path.is_dir() {
+            tasks.push(Task{path});
+        }
+    }
+    Ok(tasks)
+}
