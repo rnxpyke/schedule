@@ -25,11 +25,6 @@ a task can only ever be in one of the standard groups. If more than one standard
 ### cli
 there will be a command line program to create, edit and remove projects and tasks.
 there will also be a json-rpc mode that exposes the same operations. Additionally, when run in this mode,
-the application will hold an in memory grid of projects and tasks looking like this:
-|  |todo|in progress|finished|
-|--| -- |    --     |   --   |
-|project 1 |some task...  |another task...  | some finished task|
-| ...
-
+the application will hold an in memory grid of projects and tasks.
 This way, it will be possible to easily build a graphical frontend for the application. 
 
