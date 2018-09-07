@@ -1,0 +1,6 @@
+[package]
+name = "schedule"
+version = "0.1.0"
+authors = ["rnxypke <rnxpyke@gmail.com>"]
+
+[dependencies]
