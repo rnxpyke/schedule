@@ -29,12 +29,12 @@ fn main() {
             println!("{:?}", list_projects());
             },
         Some("create") => { 
-            add_project(
+            println!("{:?}", add_project(
                 matches.subcommand_matches("create")
                 .unwrap()
                 .value_of("name")
                 .unwrap()
-                .to_string()); },
+                .to_string())); },
         _ => {}
     }
 }
