@@ -6,8 +6,6 @@ use clap::{App,Arg,SubCommand};
 
 use schedule::*;
 
-use std::fs;
-use std::env;
 
 
 fn main() {
