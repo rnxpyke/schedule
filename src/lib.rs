@@ -1,5 +1,6 @@
 use std::fs;
 use std::io;
+use std::io::Write;
 use std::env;
 use std::path::PathBuf;
 
@@ -51,4 +52,13 @@ fn list_projects_res() -> io::Result<Vec<Project>> {
     }
     Ok(projects)
 }
+
+pub fn add_project(name: String) -> io::Result<()> {
+    let dir = get_path();
+    fs::create_dir(dir.clone()+"/"+&name)?;
+    let mut file = fs::File::create(dir+"/"+&name+"/name")?;
+    file.write(name.as_bytes())?;
+    Ok(())
+}
+
 
