@@ -18,6 +18,7 @@ pub fn get_path() -> PathBuf {
     PathBuf::from(get_path_string())
 }
 
+#[allow(unused_must_use)]
 pub fn init_store() {
     fs::create_dir(get_path());
 }
@@ -96,3 +97,45 @@ fn list_tasks_res(p: &Project) -> io::Result<Vec<Task>> {
     }
     Ok(tasks)
 }
+
+pub fn list_tasks(p: &Project) -> Vec<Task> {
+    match list_tasks_res(p) {
+        Ok(x) => x,
+        _ => vec!()
+    }
+}
+
+#[derive(Copy,Clone,Debug)]
+pub enum Group {
+    Todo,
+    InProgress,
+    Finished,
+    Misc
+}
+
+#[derive(Clone,Debug)]
+pub struct TaskInfo {
+    name: String,
+    group: Group,
+}
+
+pub fn add_tasks_err(p: &Project, task: &TaskInfo) -> io::Result<()> {
+    let mut dir = p.path.clone();
+    dir.push("tasks");
+    dir.push(task.name.clone());
+    fs::create_dir(&dir)?;
+    
+    dir.push("name");
+    let mut name = fs::File::create(&dir)?;
+    name.write_all(task.name.as_bytes())?;
+    
+    dir.pop();
+    dir.push("groups");
+
+    let mut groups = fs::File::create(&dir)?;
+    groups.write_all(format!("{:?}", &task.group).as_bytes())?;
+
+    Ok(())
+}
+
+
