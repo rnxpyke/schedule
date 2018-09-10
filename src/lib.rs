@@ -27,6 +27,12 @@ pub struct Project {
     path: PathBuf,
 }
 
+impl Project {
+    pub fn name(&self) -> String {
+        "".to_string()
+    }
+}
+
 #[derive(Debug, Clone)]
 pub struct Task {
     path: PathBuf,

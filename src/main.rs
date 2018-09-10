@@ -26,9 +26,15 @@ fn main() {
     init_store();
 
     match matches.subcommand() {
-        ("list", Some(_)) => {
-            println!("{:?}", list_projects());
-        }
+        ("list", Some(sub)) => match sub.value_of("item") {
+            Some(item) => match list_projects().iter().filter(|&x| x.name() == item).next() {
+                Some(x) => {
+                    list_tasks(x);
+                }
+                _ => panic!("item not found"),
+            },
+            _ => println!("{:?}", list_projects()),
+        },
         ("create", Some(sub)) => println!(
             "{:?}",
             add_project(sub.value_of("name").unwrap().to_string())
