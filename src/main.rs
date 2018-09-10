@@ -29,7 +29,7 @@ fn main() {
         ("list", Some(sub)) => match sub.value_of("item") {
             Some(item) => match list_projects().iter().filter(|&x| x.name() == item).next() {
                 Some(x) => {
-                    list_tasks(x);
+                    println!("{:?}", list_tasks(x));
                 }
                 _ => panic!("item not found"),
             },

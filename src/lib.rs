@@ -29,7 +29,12 @@ pub struct Project {
 
 impl Project {
     pub fn name(&self) -> String {
-        "".to_string()
+        let mut path = self.path.clone();
+        path.push("name");
+        match fs::read_to_string(path) {
+            Ok(x) => x,
+            _ => panic!("could not read name"),
+        }
     }
 }
 
@@ -103,7 +108,7 @@ fn list_tasks_res(p: &Project) -> io::Result<Vec<Task>> {
 pub fn list_tasks(p: &Project) -> Vec<Task> {
     match list_tasks_res(p) {
         Ok(x) => x,
-        _ => vec![],
+        Err(x) => panic!(x),
     }
 }
 
