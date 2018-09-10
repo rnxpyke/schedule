@@ -11,7 +11,11 @@ use schedule::*;
 fn main() {
     let matches = App::new("schedule")
                     .subcommand(SubCommand::with_name("list")
-                        .about("list projects"))
+                        .about("list projects")
+                        .arg(Arg::with_name("item")
+                                .help("which item to list")
+                                .index(1)
+                                .required(false)))
                     .subcommand(SubCommand::with_name("create")
                         .about("create project")
                         .arg(Arg::with_name("name")
@@ -22,19 +26,21 @@ fn main() {
 
     init_store();
 
-    match matches.subcommand_name() {
-        Some("list") => {
-            println!("{:?}", list_projects());
+    match matches.subcommand() {
+        ("list", Some(_)) => {
+                println!("{:?}", list_projects());
             },
-        Some("create") => { 
-            println!("{:?}", add_project(
-                matches.subcommand_matches("create")
-                .unwrap()
-                .value_of("name")
-                .unwrap()
-                .to_string())); },
-        _ => {}
+        ("create", Some(sub)) => {
+                println!("{:?}", add_project(
+                    sub
+                    .value_of("name")
+                    .unwrap()
+                    .to_string()
+                    ))
+            },
+        _ => {},
     }
+ 
 }
 
 
