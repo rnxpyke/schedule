@@ -126,6 +126,15 @@ pub struct TaskInfo {
     group: Group,
 }
 
+impl TaskInfo {
+    pub fn from_name(name: String) -> TaskInfo {
+        TaskInfo {
+            name,
+            group: Group::Misc,
+        }
+    }
+}
+
 pub fn add_tasks_err(p: &Project, task: &TaskInfo) -> io::Result<()> {
     let mut dir = p.path.clone();
     dir.push("tasks");
