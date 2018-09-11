@@ -36,6 +36,10 @@ impl Project {
             _ => panic!("could not read name"),
         }
     }
+    pub fn remove(self) -> io::Result<()> {
+        fs::remove_dir_all(self.path)?;
+        Ok(())
+    }
 }
 
 #[derive(Debug, Clone)]

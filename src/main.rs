@@ -37,6 +37,15 @@ fn main() {
                         .index(2)
                         .required(true),
                 ),
+        ).subcommand(
+            SubCommand::with_name("remove")
+                .about("remove task or project")
+                .arg(
+                    Arg::with_name("project")
+                        .help("the name of the project")
+                        .index(1)
+                        .required(true),
+                ).arg(Arg::with_name("task").help("the name of the task").index(2)),
         ).get_matches();
 
     init_store();
@@ -60,7 +69,20 @@ fn main() {
             let task = sub.value_of("task").unwrap().to_string();
             println!("{:?}", add_task_to_project(project, task));
         }
+        ("remove", Some(sub)) => {
+            println!("{:?}", remove(sub));
+        }
         _ => {}
+    }
+}
+
+fn remove(sub: &clap::ArgMatches) -> io::Result<()> {
+    let project_name = sub.value_of("project").unwrap().to_string();
+    let project = wrap_option(get_project(project_name), "project not found".to_string())?;
+    match sub.value_of("task") {
+        //todo
+        Some(s) => Err(io::Error::new(io::ErrorKind::Other, "not implemented")),
+        None => project.remove(),
     }
 }
 
